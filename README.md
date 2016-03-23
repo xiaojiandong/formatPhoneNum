@@ -6,3 +6,4 @@
 ![image](https://github.com/xiaojiandong/formatPhoneNum/blob/master/error1-phone-num.png)
 ## 第2种报错：当用户输入了汉字,英文,或其他特殊字符时
 ![image](https://github.com/xiaojiandong/formatPhoneNum/blob/master/error2-phone-num.png)
+## 第3种错误：空提交，不能通过

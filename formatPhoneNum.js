@@ -16,8 +16,7 @@ $(function (){
 var SUBJ = SUBJ || {}; // SUBJ -> subject
 SUBJ.FormatePhoneNum = function(){};
 SUBJ.FormatePhoneNum.prototype = {
-   userEditedPhoneVal : null, // 用户最终编辑的手机号
-   userEditedPhoneLen : null, // 用户最终编辑的手机号长度
+   userEditedPhoneVal : null, // 用户最终编辑的手机号，全局
 
    // 初始化 传入电话输入框对象
    initEnterPhoneNumFn : function( phoneInpObj ){
@@ -29,6 +28,7 @@ SUBJ.FormatePhoneNum.prototype = {
        });
    },
 
+   // 监听输入框值的编辑
    inputTel : function( phoneInpObj ){
        $.fn.watch = function(callback) {
            return this.each(function() {
@@ -72,7 +72,6 @@ SUBJ.FormatePhoneNum.prototype = {
        if(len>3){
            numStr = numStr.slice(0,3)+STRING_FLAG+numStr.slice(STRING_FLAG+(len-3));
        }
-       that.userEditedPhoneLen = len;
 
        var finalPhoneNum = numStr.replace(/-/g,' ');
        that.userEditedPhoneVal = finalPhoneNum;
@@ -83,35 +82,26 @@ SUBJ.FormatePhoneNum.prototype = {
    // 去掉所有空格，获取完整的电话数字，返回number类型
    getPhoneNumVal : function(phoneInpObj){
        var that = this;
-       // 去掉空格，并转化为number类型
        var phoneNumStr = that.userEditedPhoneVal;
-       var phoneNumLen = that.userEditedPhoneLen;
-           if( phoneNumStr != null ){
-               phoneNumStr = phoneNumStr.replace(/[ ]/g,""); // 去掉全部空格
-           }
-           if(phoneNumLen < 12){ // 手机号码长度不符合格式
-              alert('手机号码格式不对或重新输入正确的数字');
-              phoneInpObj.val('');
-              phoneInpObj.focus();
-              return;
+       if( phoneNumStr != null ){
+           var phoneNum = phoneNumStr.split(' ').join(''); // 去掉空格
+           //  匹配手机号的正则
+           if(!(/^((1[3,5,8][0-9])|(14[5,7])|(17[0,1,6,7,8]))\d{8}$/.test(phoneNum))) {
+               alert('手机格式不正确');
+               phoneInpObj.val('');
+               phoneInpObj.focus();
+               return;
            }else{
-               if(isNaN(phoneNumStr)){
-                   console.log('typeof phoneNumStr : ' + typeof phoneNumStr);
-                   console.log('phoneNumStr : ' + phoneNumStr);
-                   alert('手机号码格式不对或重新输入正确的数字');
-                   phoneInpObj.val('');
-                   phoneInpObj.focus();
-                   return;
-               }else{
-                   phoneNumStr = parseInt(phoneNumStr);
-                   console.log('typeof phoneNumStr : ' + typeof phoneNumStr);
-                   console.log('phoneNumStr : ' + phoneNumStr);
-                   alert('你输入的电话号码：' + phoneNumStr);
-                   return phoneNumStr; // 最终返回为number类型
-               }
+               phoneNum = parseInt(phoneNum);
+               alert('你输入的手机号是： ' + phoneNum);
+               console.log('你输入的手机号是： ' + phoneNum);
+               console.log('typeof phoneNum : ' + typeof phoneNum);
+               return phoneNum;
            }
+       }else{ // 空提交时
+           alert('你根本没有输入任何东西就提交！？');
+       }
+
    }
 
 };
-
-

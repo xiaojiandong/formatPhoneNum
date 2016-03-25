@@ -3,23 +3,39 @@
 $(function (){
     // 电话输入文本框对象
     var phoneInpObj = $('.js_phone_num_inp');
-    // 实例化检测电话号码的对象
-    var formatePhoneNumObj = new SUBJ.FormatePhoneNum();
-    // 调用初始化方法 initEnterPhoneNumFn
-    formatePhoneNumObj.initEnterPhoneNumFn( phoneInpObj );
-    // 提交电话号码
+    SUBJ.FormatePhoneNum.getInstance().enterPhoneNumObjFn(phoneInpObj);
     $('.js_submit_phone_btn').on('click' , function(){
-        var phoneInpVal = formatePhoneNumObj.getPhoneNumVal(phoneInpObj); //检测手机号格式
+        var phoneInpVal = SUBJ.FormatePhoneNum.getInstance().getPhoneNumVal(phoneInpObj);
+        console.log('phoneInpVal : ' + phoneInpVal);
     });
 });
 
 var SUBJ = SUBJ || {}; // SUBJ -> subject
-SUBJ.FormatePhoneNum = function(){};
+SUBJ.FormatePhoneNum = function(){
+    this.init();
+};
+SUBJ.FormatePhoneNum.instance = null;
+/**
+ * 单例访问入口
+ * return {null | 实例}
+ */
+SUBJ.FormatePhoneNum.getInstance = function(){
+  if(!SUBJ.FormatePhoneNum.instance){
+      SUBJ.FormatePhoneNum.instance = new SUBJ.FormatePhoneNum();
+  }
+  return SUBJ.FormatePhoneNum.instance;
+};
+
+
 SUBJ.FormatePhoneNum.prototype = {
    userEditedPhoneVal : null, // 用户最终编辑的手机号，全局
+   init : function(){
+     console.log('SUBJ.FormatePhoneNum.prototype');
+     console.log('SUBJ.FormatePhoneNum.prototype');
+   },
 
    // 初始化 传入电话输入框对象
-   initEnterPhoneNumFn : function( phoneInpObj ){
+    enterPhoneNumObjFn : function( phoneInpObj ){
        var that = this;
        // 为手机输入框绑定keyup事件
        phoneInpObj.focus();
@@ -101,7 +117,6 @@ SUBJ.FormatePhoneNum.prototype = {
        }else{ // 空提交时
            alert('你根本没有输入任何东西就提交！？');
        }
-
    }
 
 };
